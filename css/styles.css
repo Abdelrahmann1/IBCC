@@ -20,7 +20,10 @@
 
   /* type — --sans/--mono are re-pointed at the Arabic stack on the /ar page */
   --sans-latin:'Montserrat',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  --sans-ar:'Cairo','Segoe UI',Tahoma,sans-serif;
+  /* real Arabic faces first — if Cairo is slow or blocked on mobile data the
+     text still shapes correctly instead of falling back to a Latin family */
+  --sans-ar:'Cairo','Noto Kufi Arabic','Noto Naskh Arabic','Segoe UI',
+            Tahoma,'Geeza Pro','Arabic Typesetting',sans-serif;
   --mono-latin:'JetBrains Mono',ui-monospace,'SFMono-Regular',Menlo,monospace;
   --sans:var(--sans-latin);
   --mono:var(--mono-latin);
@@ -819,22 +822,16 @@ html[lang="ar"] body{line-height:1.85}
 html[lang="ar"] h1,html[lang="ar"] h2,
 html[lang="ar"] h3,html[lang="ar"] h4{line-height:1.3;letter-spacing:0}
 
-/* kill letter-spacing on everything, then hand it back to Latin-only bits */
-html[lang="ar"] body,html[lang="ar"] p,html[lang="ar"] a,html[lang="ar"] li,
-html[lang="ar"] span,html[lang="ar"] b,html[lang="ar"] em,html[lang="ar"] label,
-html[lang="ar"] button,html[lang="ar"] input,html[lang="ar"] select,
-html[lang="ar"] textarea,html[lang="ar"] .eyebrow,html[lang="ar"] .h2,
-html[lang="ar"] .tag,html[lang="ar"] .nav a,html[lang="ar"] .lang{letter-spacing:0}
+/* Tracking is switched off for the whole page and handed back only to the
+   Latin islands below. This is enforced with !important on purpose: pulling
+   Arabic glyphs apart is a correctness bug, not a style choice, and an
+   enumerated reset silently loses to any later or more specific rule. One
+   blanket rule means no future edit can reintroduce the problem. */
+html[lang="ar"] *{letter-spacing:0 !important}
 
-html[lang="ar"] .hero__title{line-height:1.18;letter-spacing:0;font-size:clamp(40px,7.6vw,104px)}
-html[lang="ar"] .band__title{line-height:1.24;letter-spacing:0}
+html[lang="ar"] .hero__title{line-height:1.18;font-size:clamp(40px,7.6vw,104px)}
+html[lang="ar"] .band__title{line-height:1.24}
 html[lang="ar"] .h2{line-height:1.26}
-html[lang="ar"] .motto li,html[lang="ar"] .card h3,
-html[lang="ar"] .svc__body h3,html[lang="ar"] .steps h3{letter-spacing:0}
-/* these three carry class-level tracking that out-specifies the reset above */
-html[lang="ar"] .about__body .lead,
-html[lang="ar"] .about__badge span,
-html[lang="ar"] .contact__info span{letter-spacing:0}
 html[lang="ar"] .about__body .lead{line-height:1.7}
 
 /* Arabic renders no case change — drop the uppercase transform so the
@@ -848,17 +845,16 @@ html[lang="ar"] .contact__info span,html[lang="ar"] .filters__b,
 html[lang="ar"] .ticks li,html[lang="ar"] .hero__stats span,
 html[lang="ar"] .ftr__tag,html[lang="ar"] .nav__title{text-transform:none}
 
-/* Latin-only elements keep the brand face and their tracking */
-html[lang="ar"] .ftr__wordmark{font-family:var(--sans-latin);letter-spacing:-.06em}
-html[lang="ar"] .marquee span{font-family:var(--sans-latin);letter-spacing:-.03em;text-transform:uppercase}
+/* Latin-only islands — these hold no Arabic glyphs, so they keep the brand
+   face and opt back into tracking (matching the blanket rule's !important) */
+html[lang="ar"] .ftr__wordmark{font-family:var(--sans-latin);letter-spacing:-.06em !important}
+html[lang="ar"] .marquee span{font-family:var(--sans-latin);letter-spacing:-.03em !important;text-transform:uppercase}
 html[lang="ar"] .hero__stats b,html[lang="ar"] .about__badge b,
-html[lang="ar"] .steps__n,html[lang="ar"] .why__n,
-html[lang="ar"] .svc__no,html[lang="ar"] .idx{
-  font-family:var(--sans-latin);letter-spacing:-.02em;
-}
-html[lang="ar"] .why__n,html[lang="ar"] .svc__no,html[lang="ar"] .idx{letter-spacing:.14em}
+html[lang="ar"] .steps__n{font-family:var(--sans-latin);letter-spacing:-.02em !important}
+html[lang="ar"] .why__n,html[lang="ar"] .svc__no,
+html[lang="ar"] .idx{font-family:var(--sans-latin);letter-spacing:.14em !important}
 /* English label on the Arabic page */
-html[lang="ar"] .lang [lang="en"]{font-family:var(--mono-latin);letter-spacing:.12em;font-size:11px}
+html[lang="ar"] .lang [lang="en"]{font-family:var(--mono-latin);letter-spacing:.12em !important;font-size:11px}
 
 /* ── Motion preferences ─────────────────────────────────────── */
 @media (prefers-reduced-motion:reduce){

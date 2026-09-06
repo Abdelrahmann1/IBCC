@@ -56,11 +56,16 @@ How the bilingual layer works:
   things logical properties can't reach — transforms, gradient angles, mask positions,
   marquee direction — are handled in a small `[dir="rtl"]` block near the bottom of
   `styles.css`.
-- **Arabic typography.** Arabic is a connected script, so `letter-spacing` breaks the
-  joins between letters. Every tracked rule is reset to `0` under `html[lang="ar"]`, and
-  line-height is opened up for the taller Arabic ascenders. Latin-only elements — the
-  oversized `IBCC` wordmark, the partner marquee, section numbers — keep the brand face
-  and their original tracking.
+- **Arabic typography.** Arabic is a connected script, so `letter-spacing` pulls the
+  letters of a word apart. `html[lang="ar"] *{letter-spacing:0 !important}` switches
+  tracking off for the whole page — deliberately blunt, because an enumerated reset
+  silently loses to any later or more specific rule, and this needs to stay correct as
+  the stylesheet grows. Line-height is opened up for the taller Arabic ascenders.
+  Latin-only islands — the oversized `IBCC` wordmark, the partner marquee, section
+  numbers, the stat figures — opt back in and keep the brand face.
+- **Font fallbacks.** The Arabic stack lists Noto Kufi / Noto Naskh / Geeza Pro after
+  Cairo, so if the webfont is slow or blocked on mobile data the text still shapes in a
+  real Arabic face rather than dropping to a Latin family.
 - **Language switch.** In the header on desktop, inside the drawer on mobile. Pages
   cross-link with `hreflang` for search engines.
 
@@ -126,3 +131,6 @@ the profile, so that section was left out. Say the word and it can be added.
   which are hidden from the compact header.
 - Respects `prefers-reduced-motion`.
 - No dependencies or build tooling — edit the files and refresh.
+- `styles.css` and `main.js` are linked with a `?v=N` query. **Bump that number in both
+  HTML files whenever you change the CSS or JS**, otherwise phones and GitHub Pages will
+  keep serving the cached copy and your change won't appear on already-visited devices.
