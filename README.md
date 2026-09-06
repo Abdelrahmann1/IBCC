@@ -1,7 +1,8 @@
 # IBCC — Inspire Base Construction Company
 
-A single-page marketing website built with plain **HTML, CSS and JavaScript** — no
-frameworks, no build step. Open `index.html` in any browser to view it.
+A bilingual (English / العربية) single-page marketing website built with plain
+**HTML, CSS and JavaScript** — no frameworks, no build step. Open `index.html` in any
+browser to view it, or `ar/index.html` for the Arabic version.
 
 Modelled on the layout of the Wix "Construction Company (Professional)" template,
 rebuilt from scratch with IBCC's own brand system and content.
@@ -11,13 +12,17 @@ rebuilt from scratch with IBCC's own brand system and content.
 ## Structure
 
 ```
-IBCC-Website/
-├── index.html          all page markup
-├── css/styles.css      all styling (design tokens at the top)
+IBCC/
+├── index.html          English page (LTR)
+├── ar/index.html       Arabic page (RTL)
+├── css/styles.css      all styling — shared by both languages
 ├── js/main.js          nav, scroll reveal, counters, project filter, form
 ├── assets/             logos + photography
 └── README.md
 ```
+
+Both pages share one stylesheet and one script. Language is driven entirely by the
+`lang` and `dir` attributes on `<html>` — there is no second CSS file to keep in sync.
 
 ## Brand system
 
@@ -35,6 +40,32 @@ in `:root`, so any shade in the brand system is available.
 
 **Typography** — Montserrat (the specified brand family) for everything, paired with
 JetBrains Mono for section indices, eyebrow labels and data. Both load from Google Fonts.
+The Arabic page swaps in **Cairo** — a geometric Arabic face that sits closely with
+Montserrat — by re-pointing the `--sans` and `--mono` variables under `html[lang="ar"]`.
+
+## Arabic version
+
+`ar/index.html` is a full translation, not a machine pass: every heading, body
+paragraph, service, project, client and form label is written in Arabic, and the layout
+runs right-to-left.
+
+How the bilingual layer works:
+
+- **One stylesheet.** Directional CSS uses logical properties (`inset-inline-end`,
+  `border-inline-start`, `padding-inline`) so the layout mirrors on its own. Only the
+  things logical properties can't reach — transforms, gradient angles, mask positions,
+  marquee direction — are handled in a small `[dir="rtl"]` block near the bottom of
+  `styles.css`.
+- **Arabic typography.** Arabic is a connected script, so `letter-spacing` breaks the
+  joins between letters. Every tracked rule is reset to `0` under `html[lang="ar"]`, and
+  line-height is opened up for the taller Arabic ascenders. Latin-only elements — the
+  oversized `IBCC` wordmark, the partner marquee, section numbers — keep the brand face
+  and their original tracking.
+- **Language switch.** In the header on desktop, inside the drawer on mobile. Pages
+  cross-link with `hreflang` for search engines.
+
+To edit copy, edit the two HTML files directly — content is not pulled from a shared
+data file, which keeps each language readable and independently editable.
 
 **Logo** — extracted from `IBCC Logo.pdf` as vector-quality PNGs with transparent
 backgrounds:
@@ -65,7 +96,7 @@ All copy, project names and client names come from the IBCC company profile.
 
 **Contact details.** The profile only lists the website (`www.ibcc-sa.com`), so no phone
 number, email or street address is on the page yet. Add them in the `contact__info`
-list in `index.html` and in the footer.
+list — in **both** `index.html` and `ar/index.html` — and in each footer.
 
 **The enquiry form** validates in the browser and shows a confirmation, but does not
 send anything. Point it at a mail service — for example Formspree:
@@ -85,6 +116,13 @@ the profile, so that section was left out. Say the word and it can be added.
 
 ## Notes
 
-- Responsive down to small phones; full-screen menu under 860px.
+- Responsive down to small phones. Under 860px the navigation becomes a **side drawer**
+  that slides in from the right, over a dimmed scrim — it closes on the ✕, on the scrim,
+  on Escape, on any link, and automatically if the window is widened back to desktop.
+  On the Arabic page it mirrors to the left, which is the RTL equivalent of the same
+  edge; if you would rather pin it to the right in both languages, that is a one-line
+  change to `--drawer-out` and `inset-inline-end`.
+- The drawer also carries the "Start a Project" button and the language switch, both of
+  which are hidden from the compact header.
 - Respects `prefers-reduced-motion`.
 - No dependencies or build tooling — edit the files and refresh.

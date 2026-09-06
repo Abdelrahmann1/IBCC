@@ -33,28 +33,44 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
-  /* ── Mobile navigation ───────────────────────────────────── */
-  const burger = $('#burger');
-  const nav    = $('#nav');
+  /* ── Mobile navigation — right-hand drawer ───────────────── */
+  const burger   = $('#burger');
+  const nav      = $('#nav');
+  const scrim    = $('#scrim');
+  const navClose = $('#navClose');
 
-  function closeNav() {
+  function setNav(open) {
     if (!nav) return;
-    nav.classList.remove('is-open');
-    if (burger) burger.setAttribute('aria-expanded', 'false');
-    document.body.style.overflow = '';
+    nav.classList.toggle('is-open', open);
+    if (scrim)  scrim.classList.toggle('is-on', open);
+    if (burger) burger.setAttribute('aria-expanded', String(open));
+    // lock the page behind the drawer without losing the scroll position
+    document.body.style.overflow = open ? 'hidden' : '';
+
+    if (open) {
+      const first = $('a, button', nav);
+      if (first) first.focus({ preventScroll: true });
+    } else if (burger && nav.contains(document.activeElement)) {
+      burger.focus({ preventScroll: true });
+    }
   }
+
+  const closeNav = () => setNav(false);
 
   if (burger && nav) {
-    burger.addEventListener('click', function () {
-      const open = nav.classList.toggle('is-open');
-      burger.setAttribute('aria-expanded', String(open));
-      document.body.style.overflow = open ? 'hidden' : '';
-    });
+    burger.addEventListener('click', () => setNav(!nav.classList.contains('is-open')));
     $$('a', nav).forEach(a => a.addEventListener('click', closeNav));
   }
+  if (navClose) navClose.addEventListener('click', closeNav);
+  if (scrim)    scrim.addEventListener('click', closeNav);
 
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') closeNav();
+  });
+
+  // crossing back to the desktop layout must not leave the page scroll-locked
+  window.matchMedia('(min-width: 861px)').addEventListener('change', function (e) {
+    if (e.matches) closeNav();
   });
 
   /* ── Scroll reveal ───────────────────────────────────────── */
@@ -159,6 +175,20 @@
   }
 
   /* ── Contact form (front-end demo validation) ────────────── */
+  const STRINGS = {
+    en: {
+      incomplete: 'Please complete name, email and project details.',
+      badEmail:   'Please enter a valid email address.',
+      sent:       n => 'Thank you, ' + n + '. Your enquiry has been captured — connect this form to your mail service to receive it.'
+    },
+    ar: {
+      incomplete: 'يرجى استكمال الاسم والبريد الإلكتروني وتفاصيل المشروع.',
+      badEmail:   'يرجى إدخال بريد إلكتروني صحيح.',
+      sent:       n => 'شكرًا لك يا ' + n + '. تم استلام طلبك — اربط هذا النموذج بخدمة البريد لديك لاستقبال الرسائل.'
+    }
+  };
+  const t = STRINGS[document.documentElement.lang === 'ar' ? 'ar' : 'en'];
+
   const form = $('#form');
   const msg  = $('#formMsg');
 
@@ -171,17 +201,17 @@
       const body = (data.get('message') || '').toString().trim();
 
       if (!name || !mail || !body) {
-        msg.textContent = 'Please complete name, email and project details.';
+        msg.textContent = t.incomplete;
         msg.classList.remove('is-ok');
         return;
       }
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) {
-        msg.textContent = 'Please enter a valid email address.';
+        msg.textContent = t.badEmail;
         msg.classList.remove('is-ok');
         return;
       }
 
-      msg.textContent = 'Thank you, ' + name.split(' ')[0] + '. Your enquiry has been captured — connect this form to your mail service to receive it.';
+      msg.textContent = t.sent(name.split(' ')[0]);
       msg.classList.add('is-ok');
       form.reset();
     });

@@ -6,9 +6,11 @@
 <title>IBCC — Inspire Base Construction Company | Creating Spaces That Inspire</title>
 <meta name="description" content="IBCC (Inspire Base Construction Company) is a forward-thinking Saudi construction firm delivering high-quality, innovative and sustainable building solutions across commercial, residential, industrial, healthcare and infrastructure sectors.">
 <link rel="icon" href="assets/logo-mark.png" type="image/png">
+<link rel="alternate" hreflang="en" href="index.html">
+<link rel="alternate" hreflang="ar" href="ar/index.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&family=Cairo:wght@400;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -29,15 +31,37 @@
     </a>
 
     <nav class="nav" id="nav" aria-label="Main">
+      <div class="nav__head">
+        <span class="nav__title">Menu</span>
+        <button class="nav__close" id="navClose" aria-label="Close menu">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+        </button>
+      </div>
+
       <a href="#about"    data-nav>About</a>
       <a href="#services" data-nav>Services</a>
       <a href="#approach" data-nav>Approach</a>
       <a href="#projects" data-nav>Projects</a>
       <a href="#clients"  data-nav>Clients</a>
       <a href="#contact"  data-nav>Contact</a>
+
+      <div class="nav__foot">
+        <a href="#contact" class="btn btn--sm btn--red">
+          <span>Start a Project</span>
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        </a>
+        <a class="lang" href="ar/index.html" hreflang="ar" lang="ar">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.4" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M8 1.6c2 2 2 10.8 0 12.8M8 1.6c-2 2-2 10.8 0 12.8M1.9 5.8h12.2M1.9 10.2h12.2" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>
+          <span lang="ar">العربية</span>
+        </a>
+      </div>
     </nav>
 
     <div class="hdr__actions">
+      <a class="lang lang--hdr" href="ar/index.html" hreflang="ar" lang="ar" aria-label="التبديل إلى العربية">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.4" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M8 1.6c2 2 2 10.8 0 12.8M8 1.6c-2 2-2 10.8 0 12.8M1.9 5.8h12.2M1.9 10.2h12.2" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>
+        <span lang="ar">العربية</span>
+      </a>
       <a href="#contact" class="btn btn--sm btn--red">
         <span>Start a Project</span>
         <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
@@ -49,6 +73,8 @@
   </div>
   <div class="hdr__progress" id="progress"></div>
 </header>
+
+<div class="scrim" id="scrim" aria-hidden="true"></div>
 
 <main id="top">
 
